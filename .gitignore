@@ -1,0 +1,12 @@
+.Rhistory
+.RData
+.Rproj.user
+*.Rcheck/
+*.so
+*.o
+*.a
+*.dylib
+.DS_Store
+artifacts/
+tmp/
+dist/
