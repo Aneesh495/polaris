@@ -101,6 +101,22 @@ parse_gtfs_feed <- function(gtfs_dir) {
 #'
 #' @export
 create_synthetic_gtfs <- function(stops_df, routes_df, trips_df, stop_times_df, transfers_df = NULL) {
+  # Normalize stop coordinate column names
+  if ("stop_lat" %in% names(stops_df) && !("lat" %in% names(stops_df))) {
+    stops_df$lat <- as.numeric(stops_df$stop_lat)
+  }
+  if ("stop_lon" %in% names(stops_df) && !("lon" %in% names(stops_df))) {
+    stops_df$lon <- as.numeric(stops_df$stop_lon)
+  }
+
+  # Normalize stop_times string times to seconds
+  if (is.character(stop_times_df$arrival_time)) {
+    stop_times_df$arrival_time <- vapply(stop_times_df$arrival_time, gtfs_time_to_seconds, integer(1))
+  }
+  if (is.character(stop_times_df$departure_time)) {
+    stop_times_df$departure_time <- vapply(stop_times_df$departure_time, gtfs_time_to_seconds, integer(1))
+  }
+
   feed <- list(
     stops = stops_df,
     routes = routes_df,
