@@ -177,10 +177,11 @@ polaris_graph <- function() {
       u_id <- g$node_ids[i]
       edges <- g$forward_adj[[u_id]]
       for (e in edges) {
+        canonical_e <- g$edges[[e$id]]
         v_idx <- g$node_to_idx[[e$target]]
         g$fwd_targets[fwd_ptr] <- v_idx
         g$fwd_weights[fwd_ptr] <- e$distance
-        g$fwd_times[fwd_ptr] <- e$travel_time
+        g$fwd_times[fwd_ptr] <- if (!is.null(canonical_e)) canonical_e$travel_time else e$travel_time
         g$fwd_edge_ids[fwd_ptr] <- e$id
         fwd_ptr <- fwd_ptr + 1L
       }
@@ -194,10 +195,11 @@ polaris_graph <- function() {
       u_id <- g$node_ids[i]
       edges <- g$backward_adj[[u_id]]
       for (e in edges) {
+        canonical_e <- g$edges[[e$id]]
         v_idx <- g$node_to_idx[[e$source]]
         g$bwd_targets[bwd_ptr] <- v_idx
         g$bwd_weights[bwd_ptr] <- e$distance
-        g$bwd_times[bwd_ptr] <- e$travel_time
+        g$bwd_times[bwd_ptr] <- if (!is.null(canonical_e)) canonical_e$travel_time else e$travel_time
         g$bwd_edge_ids[bwd_ptr] <- e$id
         bwd_ptr <- bwd_ptr + 1L
       }
