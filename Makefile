@@ -6,9 +6,11 @@ CFLAGS ?= -O3 -Wall -Wextra -pedantic -fPIC -std=c17
 R_HOME ?= $(shell R RHOME 2>/dev/null || echo "/opt/homebrew/lib/R")
 R_INCLUDES ?= $(shell R CMD config --cppflags 2>/dev/null || echo "-I/opt/homebrew/Cellar/r/4.5.1/lib/R/include")
 
-.PHONY: all clean test test-unit test-integration test-regression verify benchmark lint serve doctor
+.PHONY: all build clean test test-unit test-integration test-regression acceptance verify benchmark lint serve doctor
 
-all: src/polaris_accel.so
+all: build
+
+build: src/polaris_accel.so
 
 src/polaris_accel.so: src/polaris_accel.c src/polaris_accel.h
 	@echo "==> Compiling native C acceleration kernel..."
@@ -16,7 +18,7 @@ src/polaris_accel.so: src/polaris_accel.c src/polaris_accel.h
 
 clean:
 	@echo "==> Cleaning compiled artifacts..."
-	rm -f src/*.o src/*.so src/*.dylib src/Makevars
+	rm -f src/*.o src/*.so src/*.dylib
 	rm -rf artifacts tmp dist
 
 test: all
@@ -35,11 +37,13 @@ test-regression: all
 	@echo "==> Running bug regression ledger tests..."
 	Rscript tests/test_runner.R --suite regression
 
-verify: all
+acceptance: all
 	@echo "==> Executing 16 Acceptance Gates and certified evidence export..."
 	Rscript tools/run_acceptance.R -o artifacts/evidence_bundle.json
+
+verify: acceptance
 	@echo "==> Auditing evidence bundle with 14 Negative Controls..."
-	Rscript tools/verify_evidence.R artifacts/evidence_bundle.json --negative-controls
+	Rscript tools/verify_evidence.R -i artifacts/evidence_bundle.json
 
 benchmark: all
 	@echo "==> Executing computational benchmarks..."
