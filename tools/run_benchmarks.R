@@ -166,7 +166,7 @@ cat("\n--- MACRO-BENCHMARKS: MAP MATCHING & VITERBI ---------------------------\
 gps_trace_df <- data.frame(
   lat = 37.70 + (0:5)*0.01 + rnorm(6, 0, 0.0001),
   lon = -122.45 + (0:5)*0.01 + rnorm(6, 0, 0.0001),
-  timestamp = as.numeric(as.POSIXct("2026-10-18 10:00:00", tz = "UTC")) + (0:5)*5
+  timestamp = as.numeric(as.POSIXct("2023-11-18 10:00:00", tz = "UTC")) + (0:5)*5
 )
 
 benchmark_results[[10]] <- measure_time(

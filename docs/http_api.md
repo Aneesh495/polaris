@@ -27,7 +27,7 @@ Example Response:
   "nodes": 100,
   "edges": 360,
   "native_acceleration": true,
-  "timestamp": "2026-10-18T10:00:00Z"
+  "timestamp": "2023-11-18T10:00:00Z"
 }
 ```
 
